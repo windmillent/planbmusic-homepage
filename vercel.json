@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!sitemap\\.xml|robots\\.txt|naver.*\\.html|.*\\.(ico|png|jpg|jpeg|svg|webp|gif)).*)",
       "destination": "/index.html"
     }
   ],
@@ -23,20 +23,15 @@
           "value": "text/plain"
         }
       ]
-    }
-  ],
-  "routes": [
-    {
-      "src": "/sitemap.xml",
-      "dest": "/sitemap.xml"
     },
     {
-      "src": "/robots.txt",
-      "dest": "/robots.txt"
-    },
-    {
-      "src": "/(.*\\.(ico|png|jpg|jpeg|svg|webp|gif))",
-      "dest": "/$1"
+      "source": "/naver68cca2f67ac03c6e9da1946f244a4cb0.html",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html"
+        }
+      ]
     }
   ]
 }
