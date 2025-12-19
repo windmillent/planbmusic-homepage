@@ -57,11 +57,44 @@ export function AlbumsPage({ onAlbumClick }: AlbumsPageProps) {
       if (!isNaN(pageNum) && pageNum > 0) {
         setCurrentPage(pageNum);
       }
+    } else {
+      // 페이지 파라미터가 없으면 1페이지
+      setCurrentPage(1);
     }
     
     if (categoryParam) {
       setSelectedCategory(categoryParam);
+    } else {
+      // 카테고리 파라미터가 없으면 전체
+      setSelectedCategory('전체');
     }
+  }, []);
+
+  // URL 변경 감지 (뒤로가기/앞으로가기 대응)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const params = new URLSearchParams(window.location.hash.split('?')[1] || '');
+      const pageParam = params.get('page');
+      const categoryParam = params.get('category');
+      
+      if (pageParam) {
+        const pageNum = parseInt(pageParam, 10);
+        if (!isNaN(pageNum) && pageNum > 0) {
+          setCurrentPage(pageNum);
+        }
+      } else {
+        setCurrentPage(1);
+      }
+      
+      if (categoryParam) {
+        setSelectedCategory(categoryParam);
+      } else {
+        setSelectedCategory('전체');
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   // SEO: 앨범 페이지 메타 태그 설정
@@ -116,8 +149,15 @@ export function AlbumsPage({ onAlbumClick }: AlbumsPageProps) {
 
   // 카테고리가 변경될 때 페이지를 1로 리셋
   useEffect(() => {
-    setCurrentPage(1);
-    updateURL(1, selectedCategory);
+    // 초기 로딩 시에는 실행하지 않음 (이미 URL에서 읽었으므로)
+    const params = new URLSearchParams(window.location.hash.split('?')[1] || '');
+    const currentCategoryParam = params.get('category') || '전체';
+    
+    // 실제로 카테고리가 변경되었을 때만 실행
+    if (selectedCategory !== currentCategoryParam) {
+      setCurrentPage(1);
+      updateURL(1, selectedCategory);
+    }
   }, [selectedCategory]);
 
   // URL 업데이트 함수
