@@ -74,7 +74,7 @@ export function FAQPage({ onNavigate }: FAQPageProps = {}) {
       {/* Header */}
       <AnimatedGradientHeader 
         title="FAQ" 
-        subtitle="음원 발매 절차부터 정산 가이드까지, 창작자가 가장 궁금해하는 핵심 질문들에 대한 명쾌한 해답입니다."
+        subtitle="음원 발매 절차부터 정산 가이드까지, 창작자가 가장 궁금해하는 핵심 질문들에 대한 명쾌한 해답을 드립니다."
       />
 
       {/* FAQ Content */}
