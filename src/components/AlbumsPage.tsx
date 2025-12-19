@@ -46,6 +46,24 @@ export function AlbumsPage({ onAlbumClick }: AlbumsPageProps) {
   const [banner, setBanner] = useState<any>(null);
   const itemsPerPage = 12;
 
+  // URL에서 페이지 번호와 카테고리 읽기
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.hash.split('?')[1] || '');
+    const pageParam = params.get('page');
+    const categoryParam = params.get('category');
+    
+    if (pageParam) {
+      const pageNum = parseInt(pageParam, 10);
+      if (!isNaN(pageNum) && pageNum > 0) {
+        setCurrentPage(pageNum);
+      }
+    }
+    
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+  }, []);
+
   // SEO: 앨범 페이지 메타 태그 설정
   useEffect(() => {
     document.title = 'Albums - PLANB MUSIC | 음악 앨범 카탈로그';
@@ -99,7 +117,21 @@ export function AlbumsPage({ onAlbumClick }: AlbumsPageProps) {
   // 카테고리가 변경될 때 페이지를 1로 리셋
   useEffect(() => {
     setCurrentPage(1);
+    updateURL(1, selectedCategory);
   }, [selectedCategory]);
+
+  // URL 업데이트 함수
+  const updateURL = (page: number, category: string) => {
+    const params = new URLSearchParams();
+    if (page > 1) params.set('page', page.toString());
+    if (category !== '전체') params.set('category', category);
+    
+    const queryString = params.toString();
+    const newHash = queryString ? `/albums?${queryString}` : '/albums';
+    
+    // location.hash 사용 (브라우저 히스토리에 자동 추가)
+    window.location.hash = newHash;
+  };
 
   const categories = [
     { id: 'all', label: '전체', count: albums.length },
@@ -141,6 +173,7 @@ export function AlbumsPage({ onAlbumClick }: AlbumsPageProps) {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+    updateURL(pageNumber, selectedCategory);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

@@ -28,7 +28,9 @@ export default function App() {
   useEffect(() => {
     const initializeFromHash = () => {
       const hash = window.location.hash.slice(1) || '/';
-      const path = hash.split('/').filter(Boolean);
+      // 쿼리 파라미터 제거 (예: /albums?page=5 -> /albums)
+      const pathWithoutQuery = hash.split('?')[0];
+      const path = pathWithoutQuery.split('/').filter(Boolean);
       
       if (path.length === 0) {
         setCurrentPage('home');
@@ -63,7 +65,9 @@ export default function App() {
   useEffect(() => {
     const handlePopState = () => {
       const hash = window.location.hash.slice(1) || '/';
-      const path = hash.split('/').filter(Boolean);
+      // 쿼리 파라미터 제거 (예: /albums?page=5 -> /albums)
+      const pathWithoutQuery = hash.split('?')[0];
+      const path = pathWithoutQuery.split('/').filter(Boolean);
       
       if (path.length === 0) {
         setCurrentPage('home');
@@ -166,19 +170,15 @@ export default function App() {
   const handleAlbumClick = (albumId: string) => {
     setSelectedAlbumId(albumId);
     setCurrentPage('album-detail');
-    // Update URL hash for browser history
-    window.history.pushState(null, '', `#/albums/${albumId}`);
+    // location.hash로 변경하면 자동으로 히스토리에 추가됨
+    window.location.hash = `/albums/${albumId}`;
     // Scroll to top when navigating to album detail
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBackToAlbums = () => {
-    setSelectedAlbumId(null);
-    setCurrentPage('albums');
-    // Update URL hash for browser history
-    window.history.pushState(null, '', '#/albums');
-    // Scroll to top when going back
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 브라우저 뒤로가기 사용 (이전 페이지 번호 유지)
+    window.history.back();
   };
 
   // Navigation handler that updates URL hash
