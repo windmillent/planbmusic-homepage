@@ -4,52 +4,13 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-  <!-- Homepage / Distribution -->
+  <!-- Main Page (SPA with Hash Routing) -->
+  <!-- All content accessible via https://www.planbmusic.co.kr/#/* -->
   <url>
     <loc>https://www.planbmusic.co.kr/</loc>
     <lastmod>2025-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-  </url>
-
-  <!-- Albums Page -->
-  <url>
-    <loc>https://www.planbmusic.co.kr/albums</loc>
-    <lastmod>2025-12-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- About Page -->
-  <url>
-    <loc>https://www.planbmusic.co.kr/about</loc>
-    <lastmod>2025-12-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Contact Page -->
-  <url>
-    <loc>https://www.planbmusic.co.kr/contact</loc>
-    <lastmod>2025-12-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- FAQ Page -->
-  <url>
-    <loc>https://www.planbmusic.co.kr/faq</loc>
-    <lastmod>2025-12-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Media Page -->
-  <url>
-    <loc>https://www.planbmusic.co.kr/media</loc>
-    <lastmod>2025-12-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
 
 </urlset>
