@@ -1,9 +1,19 @@
 import { motion } from 'motion/react';
+import { useEffect } from 'react';
 import gradientDots from 'figma:asset/3e8773a26a1c5d7aba8ce2793d7cca62bf591f3d.png';
 import planbLogoWithSlogan from 'figma:asset/815b5738a398eb37b405fa2eb742e21129a3c7da.png';
 import gradientBar from 'figma:asset/4eaa28092d1900da18dff5b5acdce29e60ca64ed.png';
 
 export function HomePage() {
+  // SEO: 홈페이지 메타 태그 설정
+  useEffect(() => {
+    document.title = 'PLANB MUSIC - 음악 배급 플랫폼 | 음원 유통 서비스';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', '음원 발매부터 정산까지 창작자와 함께하는 전문 음악 배급 플랫폼. 국내외 주요 스트리밍 서비스 유통.');
+    }
+  }, []);
+
   return (
     <div className="pt-20">
       {/* Hero Section - Fixed height, no scroll */}

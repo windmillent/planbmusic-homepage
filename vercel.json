@@ -3,7 +3,7 @@
   "outputDirectory": "build",
   "rewrites": [
     {
-      "source": "/((?!sitemap\\.xml|robots\\.txt|naver.*\\.html|.*\\.(ico|png|jpg|jpeg|svg|webp|gif)).*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ],

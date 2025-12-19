@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, 
   Music, 
@@ -29,6 +29,23 @@ interface AdminPageProps {
 export function AdminPage({ onLogout }: AdminPageProps) {
   const [currentTab, setCurrentTab] = useState<AdminTabType>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // 검색엔진 차단 메타 태그 추가
+  useEffect(() => {
+    const metaRobots = document.createElement('meta');
+    metaRobots.name = 'robots';
+    metaRobots.content = 'noindex, nofollow';
+    document.head.appendChild(metaRobots);
+
+    // 타이틀 변경
+    const originalTitle = document.title;
+    document.title = '관리자 페이지 - PLANB MUSIC';
+
+    return () => {
+      document.head.removeChild(metaRobots);
+      document.title = originalTitle;
+    };
+  }, []);
 
   const menuItems = [
     { id: 'dashboard' as AdminTabType, label: '대시보드', icon: LayoutDashboard },

@@ -63,6 +63,7 @@ export default defineConfig({
     target: 'esnext',
     outDir: 'build',
   },
+  publicDir: 'public',  // 👈 이 줄 추가!
   server: {
     port: 3000,
     open: true,

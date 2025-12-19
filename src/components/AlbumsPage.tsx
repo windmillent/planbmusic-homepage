@@ -34,18 +34,6 @@ interface Album {
   isHidden?: boolean;
 }
 
-interface Banner {
-  id: string;
-  title: string;
-  imageUrl: string;
-  link: string;
-  isActive: boolean;
-  position: string;
-  textColor?: string;
-  subtitle?: string;
-  buttonText?: string;
-}
-
 interface AlbumsPageProps {
   onAlbumClick?: (albumId: string) => void;
 }
@@ -53,10 +41,19 @@ interface AlbumsPageProps {
 export function AlbumsPage({ onAlbumClick }: AlbumsPageProps) {
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [albums, setAlbums] = useState<Album[]>([]);
-  const [banner, setBanner] = useState<Banner | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [banner, setBanner] = useState<any>(null);
   const itemsPerPage = 12;
+
+  // SEO: 앨범 페이지 메타 태그 설정
+  useEffect(() => {
+    document.title = 'Albums - PLANB MUSIC | 음악 앨범 카탈로그';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'PLANB MUSIC이 유통하는 다양한 앨범과 OST를 만나보세요. 국내외 아티스트의 최신 음악.');
+    }
+  }, []);
 
   const API_URL = `https://${projectId}.supabase.co/functions/v1/make-server-097ccdc0`;
 
@@ -66,12 +63,11 @@ export function AlbumsPage({ onAlbumClick }: AlbumsPageProps) {
       try {
         setLoading(true);
         
-        // ✅ 병렬 호출로 성능 개선!
         const [albumsResponse, bannerResponse] = await Promise.all([
           fetch(`${API_URL}/albums`, {
             headers: { 'Authorization': `Bearer ${publicAnonKey}` },
           }),
-          fetch(`${API_URL}/banners/active/albums`, {
+          fetch(`${API_URL}/banners/albums-page`, {
             headers: { 'Authorization': `Bearer ${publicAnonKey}` },
           }),
         ]);
@@ -86,7 +82,9 @@ export function AlbumsPage({ onAlbumClick }: AlbumsPageProps) {
         // 배너 데이터 처리
         if (bannerResponse.ok) {
           const bannerData = await bannerResponse.json();
-          setBanner(bannerData.banner);
+          if (bannerData.banner && bannerData.banner.isActive) {
+            setBanner(bannerData.banner);
+          }
         }
       } catch (error) {
         console.error('Error fetching data:', error);

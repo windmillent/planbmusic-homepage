@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Lock, User, LogIn } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
 import { projectId, publicAnonKey } from '../../utils/supabase/info';
@@ -13,6 +13,23 @@ export function AdminLoginPage({ onLoginSuccess }: AdminLoginPageProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // 검색엔진 차단 메타 태그 추가
+  useEffect(() => {
+    const metaRobots = document.createElement('meta');
+    metaRobots.name = 'robots';
+    metaRobots.content = 'noindex, nofollow';
+    document.head.appendChild(metaRobots);
+
+    // 타이틀 변경
+    const originalTitle = document.title;
+    document.title = '관리자 로그인 - PLANB MUSIC';
+
+    return () => {
+      document.head.removeChild(metaRobots);
+      document.title = originalTitle;
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
