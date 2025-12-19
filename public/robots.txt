@@ -6,18 +6,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/*
 
-# Sitemap
 Sitemap: https://www.planbmusic.co.kr/sitemap.xml
-
-# Crawl-delay
-Crawl-delay: 0
-
-# Search Engine Specific
-User-agent: Googlebot
-Allow: /
-
-User-agent: Yeti
-Allow: /
-
-User-agent: Daumoa
-Allow: /
