@@ -1,10 +1,26 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "build",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/((?!sitemap\\.xml|robots\\.txt|naver.*\\.html|.*\\.(ico|png|jpg|jpeg|svg|webp|gif)).*)",
-      "destination": "/index.html"
+      "src": "/sitemap.xml",
+      "dest": "/sitemap.xml"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/robots.txt"
+    },
+    {
+      "src": "/naver68cca2f67ac03c6e9da1946f244a4cb0.html",
+      "dest": "/naver68cca2f67ac03c6e9da1946f244a4cb0.html"
+    },
+    {
+      "src": "/(.*\\.(ico|png|jpg|jpeg|svg|webp|gif))",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ],
   "headers": [
