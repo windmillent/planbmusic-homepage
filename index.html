@@ -1,15 +1,56 @@
-
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>planbmusic-homepage</title>
-    </head>
-
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
-  
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    
+    <!-- Favicon - Multiple formats for better browser support -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="PLANB MUSIC - 음원 발매부터 정산까지, 창작자와 함께하는 음악 배급 플랫폼. 국내외 주요 스트리밍 플랫폼에 여러분의 음악을 전달합니다." />
+    <meta name="keywords" content="음원 유통, 음악 배급, 디지털 음원, 음원 발매, 스트리밍, PLANB MUSIC" />
+    <meta name="author" content="PLANB MUSIC" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://planbmusic.co.kr/" />
+    <meta property="og:title" content="PLANB MUSIC - Music Distribution" />
+    <meta property="og:description" content="음원 발매부터 정산까지, 창작자와 함께하는 음악 배급 플랫폼" />
+    <meta property="og:image" content="https://www.planbmusic.co.kr/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://planbmusic.co.kr/" />
+    <meta name="twitter:title" content="PLANB MUSIC - Music Distribution" />
+    <meta name="twitter:description" content="음원 발매부터 정산까지, 창작자와 함께하는 음악 배급 플랫폼" />
+    <meta name="twitter:image" content="https://www.planbmusic.co.kr/og-image.png" />
+    
+    <!-- Pretendard 폰트 프리로드 (Figma Make에서도 빠르게 로딩) -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link 
+      rel="preload" 
+      as="style" 
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+    />
+    <link 
+      rel="stylesheet" 
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+    />
+    
+    <title>PLANB MUSIC - Music Distribution</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
