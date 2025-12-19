@@ -28,9 +28,9 @@ export default function App() {
   useEffect(() => {
     const initializeFromHash = () => {
       const hash = window.location.hash.slice(1) || '/';
-      // 쿼리 파라미터 제거 (예: /albums?page=5 -> /albums)
-      const pathWithoutQuery = hash.split('?')[0];
-      const path = pathWithoutQuery.split('/').filter(Boolean);
+      // 쿼리 파라미터 포함한 전체 경로 파싱
+      const [pathPart] = hash.split('?');
+      const path = pathPart.split('/').filter(Boolean);
       
       if (path.length === 0) {
         setCurrentPage('home');
@@ -65,9 +65,9 @@ export default function App() {
   useEffect(() => {
     const handlePopState = () => {
       const hash = window.location.hash.slice(1) || '/';
-      // 쿼리 파라미터 제거 (예: /albums?page=5 -> /albums)
-      const pathWithoutQuery = hash.split('?')[0];
-      const path = pathWithoutQuery.split('/').filter(Boolean);
+      // 쿼리 파라미터 포함한 전체 경로 파싱
+      const [pathPart] = hash.split('?');
+      const path = pathPart.split('/').filter(Boolean);
       
       if (path.length === 0) {
         setCurrentPage('home');
@@ -91,7 +91,12 @@ export default function App() {
     };
 
     window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    // hashchange 이벤트도 추가 (뒤로가기 시 확실히 감지)
+    window.addEventListener('hashchange', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handlePopState);
+    };
   }, []);
 
   const initializeFAQs = async () => {
