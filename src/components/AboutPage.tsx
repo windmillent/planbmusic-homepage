@@ -8,7 +8,7 @@ export function AboutPage() {
       number: '01',
       title: 'OUR MISSION',
       quote: '"음악의 가치는 발견될 때 완성됩니다."',
-      content: `좋은 음악이 세상에 나오는 것만큼 중요한 것은, 그 음악이 '제대로' 들려지는 것입니다. 플랜비뮤직은 급변하는 디지털 음악 시장에서 아티스트와 기획사가 직면한 불확실성을 걷어내고, 전 세계 리스너에게 닿을 수 있는 가장 빠르고 투명한 루트를 설계합니다.
+      content: `좋은 음악이 세상에 나오는 것만큼 중요한 것은, 그 음악이 '제대로' 들려지는 것입니다.\n플랜비뮤직은 급변하는 디지털 음악 시장에서 아티스트와 기획사가 직면한 불확실성을 걷어내고, 전 세계 리스너에게 닿을 수 있는 가장 빠르고 투명한 루트를 설계합니다.
 
 우리는 단순한 유통 대행을 넘어, 당신의 음악이 국경과 세대를 넘어 사랑받을 수 있도록 돕는 Global Music Business Partner입니다.`,
       imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtdXNpYyUyMHByb2R1Y3Rpb24lMjBzdHVkaW98ZW58MXx8fHwxNzY1NjczNzE0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',

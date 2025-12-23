@@ -29,7 +29,7 @@ export function DistributionPage({ onNavigate }: DistributionPageProps = {}) {
     },
     {
       title: '음악 컨텐츠 투자/제작',
-      description: '신인/기성 아티스트 및 기획사 등 다양한 장르의 음악에 투자, 제작으로 음원 시장 선순환 구조에 앞장서며, 지속적인 투자, 제작을 통해 동장 성장의 기반을 확보합니다.',
+      description: '신인/기성 아티스트 및 기획사 등 다양한 장르의 음악에 투자, 제작으로 음원 시장 선순환 구조에 앞장서며, 지속적인 투자, 제작을 통해 동반 성장의 기반을 확보합니다.',
     },
     {
       title: 'SNS활용 및 타켓형 마케팅',
@@ -46,7 +46,7 @@ export function DistributionPage({ onNavigate }: DistributionPageProps = {}) {
           scrollToIndex(next);
           return next;
         });
-      }, 3000);
+      }, 6000);
     };
 
     startAutoScroll();
