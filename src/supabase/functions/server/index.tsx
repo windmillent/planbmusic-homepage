@@ -727,9 +727,9 @@ app.post("/make-server-097ccdc0/admin/login", async (c) => {
     const body = await c.req.json();
     const { username, password } = body;
 
-    // Simple hardcoded credentials (for production, use proper authentication)
-    const ADMIN_USERNAME = "ryukwangmin76@gmail.com";
-    const ADMIN_PASSWORD = "vmffosql2025!";
+// Get credentials from environment variables
+    const ADMIN_USERNAME = Deno.env.get("ADMIN_USERNAME") || "ryukwangmin76@gmail.com";
+    const ADMIN_PASSWORD = Deno.env.get("ADMIN_PASSWORD");
 
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
       // Generate a simple session token

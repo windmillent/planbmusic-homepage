@@ -46,7 +46,7 @@ export function DistributionPage({ onNavigate }: DistributionPageProps = {}) {
           scrollToIndex(next);
           return next;
         });
-      }, 6000);
+      }, 6000); // 3초 → 6초로 변경 (천천히)
     };
 
     startAutoScroll();
