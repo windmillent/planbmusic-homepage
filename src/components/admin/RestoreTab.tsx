@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Upload, CheckCircle2, AlertCircle, Loader2, Database } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
@@ -24,6 +24,12 @@ export function RestoreTab() {
   const [isComplete, setIsComplete] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<RestoreStats | null>(null);
+
+  // 컴포넌트 마운트 확인
+  useEffect(() => {
+    console.log('✅ RestoreTab 컴포넌트가 마운트되었습니다!');
+    toast.info('데이터 복원 탭이 로드되었습니다.');
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log('📂 파일 선택 대화상자 열림');
