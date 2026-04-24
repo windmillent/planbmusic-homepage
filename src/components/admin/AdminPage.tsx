@@ -21,6 +21,7 @@ import { BannerTab } from './BannerTab';
 import { ContactMessagesTab } from './ContactMessagesTab';
 import { FAQTab } from './FAQTab';
 import { RestoreTab } from './RestoreTab';
+import { toast } from 'sonner';
 
 export type AdminTabType = 'dashboard' | 'albums' | 'youtube' | 'popups' | 'banner' | 'contact' | 'faq' | 'restore';
 
@@ -31,6 +32,13 @@ interface AdminPageProps {
 export function AdminPage({ onLogout }: AdminPageProps) {
   const [currentTab, setCurrentTab] = useState<AdminTabType>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // 탭 변경 로그 추가
+  const handleTabChange = (tab: AdminTabType) => {
+    console.log('🔄 탭 변경:', currentTab, '→', tab);
+    setCurrentTab(tab);
+    toast.info(`${tab} 탭으로 이동`);
+  };
 
   // 검색엔진 차단 메타 태그 추가
   useEffect(() => {
@@ -63,7 +71,7 @@ export function AdminPage({ onLogout }: AdminPageProps) {
   const renderContent = () => {
     switch (currentTab) {
       case 'dashboard':
-        return <DashboardTab onTabChange={setCurrentTab} />;
+        return <DashboardTab onTabChange={handleTabChange} />;
       case 'albums':
         return <AlbumsTab />;
       case 'youtube':
@@ -79,7 +87,7 @@ export function AdminPage({ onLogout }: AdminPageProps) {
       case 'restore':
         return <RestoreTab />;
       default:
-        return <DashboardTab onTabChange={setCurrentTab} />;
+        return <DashboardTab onTabChange={handleTabChange} />;
     }
   };
 
@@ -99,7 +107,7 @@ export function AdminPage({ onLogout }: AdminPageProps) {
               return (
                 <button
                   key={item.id}
-                  onClick={() => setCurrentTab(item.id)}
+                  onClick={() => handleTabChange(item.id)}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                     currentTab === item.id
                       ? 'bg-gradient-to-r from-cyan-400 to-purple-500 text-white'
