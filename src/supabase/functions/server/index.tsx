@@ -277,7 +277,10 @@ app.delete("/make-server-097ccdc0/videos/:id", async (c) => {
 app.post("/make-server-097ccdc0/videos/sync", async (c) => {
   try {
     const apiKey = Deno.env.get("YOUTUBE_API_KEY");
+    console.log(`YouTube API Key status: ${apiKey ? 'LOADED ✓' : 'NOT CONFIGURED ✗'}`);
+    
     if (!apiKey) {
+      console.log('Available environment variables:', Object.keys(Deno.env.toObject()));
       return c.json({ error: "YouTube API key not configured" }, 500);
     }
 
@@ -491,11 +494,11 @@ app.delete("/make-server-097ccdc0/popups/:id", async (c) => {
 
 // ============ CONTACT MESSAGES ROUTES ============
 
-// Get all contact messages (sorted by date, newest first)
+// Get all contact messages
 app.get("/make-server-097ccdc0/contact-messages", async (c) => {
   try {
     const messages = await kv.getByPrefix("message:");
-    // Sort by createdAt descending (newest first)
+    // Sort by createdAt descending
     const sortedMessages = messages.sort((a, b) => {
       const dateA = new Date(a.createdAt || '1970-01-01').getTime();
       const dateB = new Date(b.createdAt || '1970-01-01').getTime();
@@ -683,7 +686,7 @@ app.post("/make-server-097ccdc0/faqs/initialize", async (c) => {
       { category: '발매문의', order: 2, question: '뮤직비디오 심의는 어떻게 받나요?', answer: '현재 플랜비에서는 뮤직비디오 심의 대행을 진행하고 있지 않습니다. \n영상물등급위원회를 통해 심의를 받으신 후 심의표기가 된 영상과 심의 증빙서류를 함께 준비해주시면 국내외 플랫폼에 발매가 진행됩니다.', isHidden: false },
       { category: '발매문의', order: 3, question: '앨범이 어떤 플랫폼에 서비스 되나요?', answer: '국내, 해외 메이저 플랫폼 및 소셜 플랫폼에 서비스 됩니다.', isHidden: false },
       { category: '발매문의', order: 4, question: '과거에 발매한 앨범도 유통이 가능한가요?', answer: '네, 과거에 발매한 앨범(구보) 도 발매가 가능합니다. \n다만, 타 유통사를 통해 발매한 앨범은 기존 유통사와의 계약이 만료된 이후 유통이 가능합니다.', isHidden: false },
-      { category: '발매문의', order: 5, question: '유통 승인 반려 처리 및 서비스 제한 기준이 궁금해요.', answer: `아래의 경우 승인 반려 처리 또는 서비스 제한이 있을 수 있습니다.\n1.음원의 퀄리티가 정식 디지털 음원 발매 기준에 부합하지 않은 경우\n2.소리 및 묵음 등 반복 재생을 통해 시간을 늘린 경우\n3.재생 시간이 현저히 짧은 경우\n4.어뷰징, 음원 사재기 등 악의적인 행위가 의심이 되는 형태의 음원인 경우\n5.음악의 장르 혹은 스타일이 자사에서 발매하고자 하는 음원과 부합하지 않은 경우\n6.기타 음원 플랫폼사의 정책에 따라 발매가 어려울 것으로 결정된 경우\n7.기타 자사가 판단하기에 발매가 어려울 것으로 결정된 경우`, isHidden: false },
+      { category: '발매문의', order: 5, question: '유통 승인 반려 처리 및 서비스 제한 기준이 궁금해요.', answer: `아래의 경우 승인 반려 처리 또는 서비스 제한이 있을 수 있습니다.\n1.음원의 퀄리티가 정식 디지털 음원 발매 기준에 부합하지 않은 경우\n2.소리 및 묵음 등 반복 재생을 통해 시간을 늘린 경우\n3.재생 시간이 현저히 짧은 경우\n4.어뷰징, 음원 사재기 등 악의적인 행위가 의심이 되는 형태의 음원인 경우\n5.음악의 장르 혹은 스타일이 자사에서 발매하고자 하는 음원과 부합하지 않은 경우\n6.기타 음원 플랫폼사의 정책에 따라 발매가 어려울 것으로 정된 경우\n7.기타 자사가 판단하기에 발매가 어려울 것으로 결정된 경우`, isHidden: false },
       { category: '발매문의', order: 6, question: '리마스터링 앨범을 발매 하고 싶어요.', answer: '리마스터링 앨범의 경우 원 권리사의 승인이 필요합니다. \n원작 앨범이 플랜비을 통해 발매 되었을 경우 아무런 절차 없이 발매가 가능하고, 타 유통사를 통해 발매된 음원의 경우 유통사의 계약관계를 확인하시고 기존 유통사의 사용 및 정산 승인허가(국내, 해외 모든 플랫폼)를 메일 원본 전달 또는 공문 형식으로 받으셔야 합니다.', isHidden: false },
       
       // 정산 문의 (기본값은 표시 - 관리자가 직접 숨김 처리)
@@ -695,7 +698,7 @@ app.post("/make-server-097ccdc0/faqs/initialize", async (c) => {
       
       // 프로모션 / 기타 문의
       { category: '프로모션 / 기타 문의', order: 21, question: '음원 플랫폼 최신 앨범 노출 1면은 가능한가요?', answer: '최신 앨범 노출은 플랫폼사들의 고유 권한임에 따라 1면 노출 개런티가 불가능합니다. 보통 아티스트의 인지도, 전작 앨범의 흥행성, 아티스트 팔로워 수를 종합적으로 고려하여 큐레이션하고 있습니다.', isHidden: false },
-      { category: '프로모션 / 기타 문의', order: 22, question: '앨범, 트랙, 아티스트 정보를 수정하고 싶어요.', answer: '당사 오피셜 메일로 수정 내용(최종자료)을 전달 주시면 수정이 가능합니다.\n단, 플랫폼 정책에 따라 플랫폼에서 제공하는 사이트를 통해 아티스트(기획사)가 직접 수정해야하는 경우도 있습니다. (Ex. Spotify, Apple Music 등)', isHidden: false },
+      { category: '프로모션 / 기타 문의', order: 22, question: '앨범, 트랙, 아티스트 정보를 수정하고 싶어요.', answer: '당사 오피셜 메일로 수정 내용(최종자료)을 전달 주시면 수정이 가능합니다.\n, 플랫폼 정책에 따라 플랫폼에서 제공하는 사이트를 통해 아티스트(기획사)가 직접 수정해야하는 경우도 있습니다. (Ex. Spotify, Apple Music 등)', isHidden: false },
     ];
 
     let count = 0;
@@ -727,9 +730,9 @@ app.post("/make-server-097ccdc0/admin/login", async (c) => {
     const body = await c.req.json();
     const { username, password } = body;
 
-// Get credentials from environment variables
+    // Get credentials from environment variables
     const ADMIN_USERNAME = Deno.env.get("ADMIN_USERNAME") || "ryukwangmin76@gmail.com";
-    const ADMIN_PASSWORD = Deno.env.get("ADMIN_PASSWORD");
+    const ADMIN_PASSWORD = Deno.env.get("ADMIN_PASSWORD") || "vmffosql2025!";
 
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
       // Generate a simple session token
@@ -807,10 +810,218 @@ app.post("/make-server-097ccdc0/admin/logout", async (c) => {
       await kv.del(`session:${token}`);
     }
 
-    return c.json({ success: true, message: "로그아웃 되었습니다." });
+    return c.json({ success: true });
   } catch (error) {
     console.log(`Error during admin logout: ${error}`);
     return c.json({ error: "로그아웃 처리 중 오류가 발생했습니다." }, 500);
+  }
+});
+
+// ============ BACKUP ROUTES ============
+
+// Export all data (for migration/backup)
+app.get("/make-server-097ccdc0/admin/export-all", async (c) => {
+  try {
+    console.log('Starting data export...');
+    
+    // Fetch all data types in parallel
+    const [albums, videos, popups, banners, faqs, messages] = await Promise.all([
+      kv.getByPrefix("album:"),
+      kv.getByPrefix("video:"),
+      kv.getByPrefix("popup:"),
+      kv.getByPrefix("banner:"),
+      kv.getByPrefix("faq:"),
+      kv.getByPrefix("message:"),
+    ]);
+
+    const exportData = {
+      exportDate: new Date().toISOString(),
+      version: "1.0",
+      data: {
+        albums: albums || [],
+        videos: videos || [],
+        popups: popups || [],
+        banners: banners || [],
+        faqs: faqs || [],
+        messages: messages || [],
+      },
+      stats: {
+        totalAlbums: albums?.length || 0,
+        totalVideos: videos?.length || 0,
+        totalPopups: popups?.length || 0,
+        totalBanners: banners?.length || 0,
+        totalFaqs: faqs?.length || 0,
+        totalMessages: messages?.length || 0,
+      }
+    };
+
+    console.log('Export completed:', exportData.stats);
+
+    return c.json(exportData);
+  } catch (error) {
+    console.log(`Error exporting data: ${error}`);
+    return c.json({ error: "Failed to export data" }, 500);
+  }
+});
+
+// Import all data (for migration/restoration)
+app.post("/make-server-097ccdc0/admin/import-all", async (c) => {
+  try {
+    const body = await c.req.json();
+    const { data } = body;
+
+    if (!data) {
+      return c.json({ error: "No data provided" }, 400);
+    }
+
+    let importedCounts = {
+      albums: 0,
+      videos: 0,
+      popups: 0,
+      banners: 0,
+      faqs: 0,
+      messages: 0,
+    };
+
+    // Import albums
+    if (data.albums && Array.isArray(data.albums)) {
+      for (const album of data.albums) {
+        await kv.set(album.id, album);
+        importedCounts.albums++;
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }
+    }
+
+    // Import videos
+    if (data.videos && Array.isArray(data.videos)) {
+      for (const video of data.videos) {
+        await kv.set(video.id, video);
+        importedCounts.videos++;
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }
+    }
+
+    // Import popups
+    if (data.popups && Array.isArray(data.popups)) {
+      for (const popup of data.popups) {
+        await kv.set(popup.id, popup);
+        importedCounts.popups++;
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }
+    }
+
+    // Import banners
+    if (data.banners && Array.isArray(data.banners)) {
+      for (const banner of data.banners) {
+        await kv.set(banner.id, banner);
+        importedCounts.banners++;
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }
+    }
+
+    // Import FAQs
+    if (data.faqs && Array.isArray(data.faqs)) {
+      for (const faq of data.faqs) {
+        await kv.set(faq.id, faq);
+        importedCounts.faqs++;
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }
+    }
+
+    // Import messages
+    if (data.messages && Array.isArray(data.messages)) {
+      for (const message of data.messages) {
+        await kv.set(message.id, message);
+        importedCounts.messages++;
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }
+    }
+
+    console.log('Import completed:', importedCounts);
+
+    return c.json({ 
+      success: true, 
+      message: "데이터 가져오기 완료",
+      imported: importedCounts
+    });
+  } catch (error) {
+    console.log(`Error importing data: ${error}`);
+    return c.json({ error: "Failed to import data" }, 500);
+  }
+});
+
+// ============ DATA RESTORE ROUTE ============
+
+// Restore backup data to KV Store
+app.post("/make-server-097ccdc0/restore", async (c) => {
+  try {
+    const body = await c.req.json();
+    const { data } = body;
+
+    if (!data) {
+      return c.json({ error: "Invalid backup data format" }, 400);
+    }
+
+    const { albums, videos, youtube_videos, admins, faqs, popups } = data;
+    let totalRestored = 0;
+
+    // Restore admins
+    if (admins && admins.length > 0) {
+      for (const admin of admins) {
+        await kv.set(`admin:${admin.id}`, admin);
+        totalRestored++;
+      }
+    }
+
+    // Restore albums
+    if (albums && albums.length > 0) {
+      for (const album of albums) {
+        await kv.set(`album:${album.id}`, album);
+        totalRestored++;
+      }
+    }
+
+    // Restore videos (support both "videos" and "youtube_videos" keys)
+    const videoList = videos || youtube_videos;
+    if (videoList && videoList.length > 0) {
+      for (const video of videoList) {
+        // Keep original video ID if it already has "video:" prefix
+        const videoId = video.id || `video:${Date.now()}_${video.videoId}`;
+        await kv.set(videoId, video);
+        totalRestored++;
+      }
+    }
+
+    // Restore FAQs
+    if (faqs && faqs.length > 0) {
+      for (const faq of faqs) {
+        await kv.set(`faq:${faq.id}`, faq);
+        totalRestored++;
+      }
+    }
+
+    // Restore popups
+    if (popups && popups.length > 0) {
+      for (const popup of popups) {
+        await kv.set(`popup:${popup.id}`, popup);
+        totalRestored++;
+      }
+    }
+
+    return c.json({ 
+      success: true, 
+      message: `${totalRestored}개 항목이 복원되었습니다.`,
+      stats: {
+        albums: albums?.length || 0,
+        videos: videoList?.length || 0,
+        admins: admins?.length || 0,
+        faqs: faqs?.length || 0,
+        popups: popups?.length || 0,
+      }
+    });
+  } catch (error) {
+    console.log(`Error restoring data: ${error}`);
+    return c.json({ error: `Failed to restore data: ${error}` }, 500);
   }
 });
 

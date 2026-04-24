@@ -9,7 +9,8 @@ import {
   LogOut,
   Menu,
   X,
-  HelpCircle
+  HelpCircle,
+  Database
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { DashboardTab } from './DashboardTab';
@@ -19,8 +20,9 @@ import { PopupsTab } from './PopupsTab';
 import { BannerTab } from './BannerTab';
 import { ContactMessagesTab } from './ContactMessagesTab';
 import { FAQTab } from './FAQTab';
+import { RestoreTab } from './RestoreTab';
 
-export type AdminTabType = 'dashboard' | 'albums' | 'youtube' | 'popups' | 'banner' | 'contact' | 'faq';
+export type AdminTabType = 'dashboard' | 'albums' | 'youtube' | 'popups' | 'banner' | 'contact' | 'faq' | 'restore';
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -55,6 +57,7 @@ export function AdminPage({ onLogout }: AdminPageProps) {
     { id: 'banner' as AdminTabType, label: '배너 관리', icon: ImageIcon },
     { id: 'contact' as AdminTabType, label: '문의 메시지', icon: Mail },
     { id: 'faq' as AdminTabType, label: 'FAQ', icon: HelpCircle },
+    { id: 'restore' as AdminTabType, label: '데이터 복원', icon: Database },
   ];
 
   const renderContent = () => {
@@ -73,6 +76,8 @@ export function AdminPage({ onLogout }: AdminPageProps) {
         return <ContactMessagesTab />;
       case 'faq':
         return <FAQTab />;
+      case 'restore':
+        return <RestoreTab />;
       default:
         return <DashboardTab onTabChange={setCurrentTab} />;
     }

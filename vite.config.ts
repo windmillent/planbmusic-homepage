@@ -1,10 +1,23 @@
 
   import { defineConfig } from 'vite';
-  import react from '@vitejs/plugin-react-swc';
+  import react from '@vitejs/plugin-react';
+  import tailwindcss from '@tailwindcss/vite';
   import path from 'path';
 
+function figmaAssetResolver() {
+  return {
+    name: 'figma-asset-resolver',
+    resolveId(id) {
+      if (id.startsWith('figma:asset/')) {
+        const filename = id.replace('figma:asset/', '')
+        return path.resolve(__dirname, 'src/assets', filename)
+      }
+    },
+  }
+}
+
   export default defineConfig({
-    plugins: [react()],
+    plugins: [react(), tailwindcss(), figmaAssetResolver()],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
@@ -17,13 +30,6 @@
         'next-themes@0.4.6': 'next-themes',
         'lucide-react@0.487.0': 'lucide-react',
         'input-otp@1.4.2': 'input-otp',
-        'figma:asset/fabf5b77515cd8a456d8c0e44608a2495763767c.png': path.resolve(__dirname, './src/assets/fabf5b77515cd8a456d8c0e44608a2495763767c.png'),
-        'figma:asset/ad64750a24ee1f916279c7ed992d0faf79f9620b.png': path.resolve(__dirname, './src/assets/ad64750a24ee1f916279c7ed992d0faf79f9620b.png'),
-        'figma:asset/815b5738a398eb37b405fa2eb742e21129a3c7da.png': path.resolve(__dirname, './src/assets/815b5738a398eb37b405fa2eb742e21129a3c7da.png'),
-        'figma:asset/6dccce9292d3f0db3e8fabffece2329841378d23.png': path.resolve(__dirname, './src/assets/6dccce9292d3f0db3e8fabffece2329841378d23.png'),
-        'figma:asset/663e557c1d4550cf906ea0a21e5f45388847c7fb.png': path.resolve(__dirname, './src/assets/663e557c1d4550cf906ea0a21e5f45388847c7fb.png'),
-        'figma:asset/4eaa28092d1900da18dff5b5acdce29e60ca64ed.png': path.resolve(__dirname, './src/assets/4eaa28092d1900da18dff5b5acdce29e60ca64ed.png'),
-        'figma:asset/3e8773a26a1c5d7aba8ce2793d7cca62bf591f3d.png': path.resolve(__dirname, './src/assets/3e8773a26a1c5d7aba8ce2793d7cca62bf591f3d.png'),
         'embla-carousel-react@8.6.0': 'embla-carousel-react',
         'cmdk@1.1.1': 'cmdk',
         'class-variance-authority@0.7.1': 'class-variance-authority',

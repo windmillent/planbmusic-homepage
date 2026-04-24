@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Music, Youtube, Bell, Mail, TrendingUp, Image as ImageIcon } from 'lucide-react';
+import { Music, Youtube, Bell, Mail, TrendingUp, Image as ImageIcon, Download, Upload } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { projectId, publicAnonKey } from '../../utils/supabase/info';
 import type { AdminTabType } from './AdminPage';
+import { toast } from 'sonner';
+import { Button } from '../ui/button';
 
 interface DashboardTabProps {
   onTabChange?: (tab: AdminTabType) => void;
@@ -217,6 +219,81 @@ export function DashboardTab({ onTabChange }: DashboardTabProps) {
     return date.toLocaleDateString('ko-KR');
   };
 
+  const handleExportData = async () => {
+    try {
+      const response = await fetch(`${API_URL}/admin/export-all`, {
+        headers: { 'Authorization': `Bearer ${publicAnonKey}` },
+      });
+
+      if (!response.ok) {
+        throw new Error('데이터 내보내기 실패');
+      }
+
+      const data = await response.json();
+      
+      // Create JSON file and download
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `planbmusic-backup-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success(`데이터 백업 완료! (앨범: ${data.stats.totalAlbums}개, 영상: ${data.stats.totalVideos}개)`);
+    } catch (error) {
+      console.error('Error exporting data:', error);
+      toast.error('데이터 내보내기 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleImportData = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const importData = JSON.parse(text);
+
+      if (!importData.data) {
+        toast.error('올바르지 않은 백업 파일입니다.');
+        return;
+      }
+
+      if (!confirm(`정말로 데이터를 복원하시겠습니까?\n\n앨범: ${importData.stats?.totalAlbums || 0}개\n영상: ${importData.stats?.totalVideos || 0}개\nFAQ: ${importData.stats?.totalFaqs || 0}개\n\n⚠️ 기존 데이터와 병합됩니다.`)) {
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/admin/import-all`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${publicAnonKey}`,
+        },
+        body: JSON.stringify(importData),
+      });
+
+      if (!response.ok) {
+        throw new Error('데이터 가져오기 실패');
+      }
+
+      const result = await response.json();
+      
+      toast.success(`데이터 복원 완료!\n앨범: ${result.imported.albums}개\n영상: ${result.imported.videos}개\nFAQ: ${result.imported.faqs}개`);
+      
+      // Refresh dashboard
+      fetchDashboardData();
+    } catch (error) {
+      console.error('Error importing data:', error);
+      toast.error('데이터 가져오기 중 오류가 발생했습니다.');
+    }
+
+    // Reset input
+    event.target.value = '';
+  };
+
   const statCards = [
     { label: '전체 앨범', value: stats.albums, icon: Music, color: 'from-blue-400 to-blue-600', tab: 'albums' },
     { label: '유튜브 동영상', value: stats.videos, icon: Youtube, color: 'from-red-400 to-red-600', tab: 'youtube' },
@@ -229,9 +306,36 @@ export function DashboardTab({ onTabChange }: DashboardTabProps) {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold mb-2">대시보드</h1>
-        <p className="text-gray-600">PLANB MUSIC 관리자 페이지에 오신 것을 환영합니다.</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">대시보드</h1>
+          <p className="text-gray-600">PLANB MUSIC 관리자 페이지에 오신 것을 환영합니다.</p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            onClick={handleExportData}
+            className="bg-gradient-to-r from-cyan-400 to-purple-600 text-white"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            데이터 백업
+          </Button>
+          <label>
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleImportData}
+              className="hidden"
+            />
+            <Button
+              as="span"
+              variant="outline"
+              className="cursor-pointer"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              데이터 복원
+            </Button>
+          </label>
+        </div>
       </div>
 
       {/* Stats Grid */}
