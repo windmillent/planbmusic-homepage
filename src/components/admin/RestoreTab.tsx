@@ -51,6 +51,8 @@ export function RestoreTab() {
       const fileContent = await file.text();
       const backupData = JSON.parse(fileContent);
 
+      console.log('📦 백업 파일 내용:', backupData);
+
       if (!backupData.data) {
         throw new Error('잘못된 백업 파일 형식입니다.');
       }
@@ -58,29 +60,40 @@ export function RestoreTab() {
       setCurrentStep('서버로 데이터 전송 중...');
       setProgress(10);
 
+      // Get admin token from localStorage
+      const token = localStorage.getItem('admin_token');
+      console.log('🔑 관리자 토큰:', token ? '있음' : '없음');
+
+      const apiUrl = `https://${projectId}.supabase.co/functions/v1/make-server-097ccdc0/restore`;
+      console.log('📡 API URL:', apiUrl);
+
       // Send to server API
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-097ccdc0/restore`, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${publicAnonKey}`,
+          'Authorization': `Bearer ${token || publicAnonKey}`,
         },
         body: JSON.stringify(backupData),
       });
 
+      console.log('📨 서버 응답 상태:', response.status, response.statusText);
+
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('❌ 서버 오류:', errorData);
         throw new Error(errorData.error || '복원 중 오류가 발생했습니다.');
       }
 
       const result = await response.json();
+      console.log('✅ 복원 결과:', result);
       
       setProgress(100);
       setStats(result.stats);
       setCurrentStep('복원 완료!');
       setIsComplete(true);
     } catch (err: any) {
-      console.error('Restore error:', err);
+      console.error('🔥 Restore error:', err);
       setError(err.message || '복원 중 오류가 발생했습니다.');
     } finally {
       setIsRestoring(false);
