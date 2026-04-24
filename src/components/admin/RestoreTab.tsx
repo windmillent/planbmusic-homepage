@@ -4,6 +4,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Progress } from '../ui/progress';
 import { Alert, AlertDescription } from '../ui/alert';
+import { toast } from 'sonner';
 import { projectId, publicAnonKey } from '../../utils/supabase/info';
 
 interface RestoreStats {
@@ -25,21 +26,36 @@ export function RestoreTab() {
   const [stats, setStats] = useState<RestoreStats | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('📂 파일 선택 대화상자 열림');
     const selectedFile = e.target.files?.[0];
+    console.log('📁 선택된 파일:', selectedFile);
+    
     if (selectedFile && selectedFile.type === 'application/json') {
       setFile(selectedFile);
       setError(null);
       setIsComplete(false);
-    } else {
-      setError('JSON 파일만 업로드 가능합니다.');
+      toast.success(`파일 선택됨: ${selectedFile.name}`);
+      console.log('✅ JSON 파일 선택 완료:', selectedFile.name);
+    } else if (selectedFile) {
+      const errorMsg = 'JSON 파일만 업로드 가능합니다.';
+      setError(errorMsg);
+      toast.error(errorMsg);
+      console.error('❌ 잘못된 파일 형식:', selectedFile.type);
     }
   };
 
   const handleRestore = async () => {
+    console.log('🚀 복원 시작! 버튼 클릭됨');
+    
     if (!file) {
+      console.error('⚠️ 파일이 선택되지 않음');
       setError('파일을 선택해주세요.');
+      toast.error('파일을 먼저 선택해주세요.');
       return;
     }
+
+    console.log('📁 선택된 파일:', file.name, file.type, file.size);
+    toast.info('복원을 시작합니다...');
 
     setIsRestoring(true);
     setProgress(0);
@@ -49,8 +65,9 @@ export function RestoreTab() {
     try {
       // Read file content
       const fileContent = await file.text();
+      console.log('📄 파일 읽기 완료, 크기:', fileContent.length);
+      
       const backupData = JSON.parse(fileContent);
-
       console.log('📦 백업 파일 내용:', backupData);
 
       if (!backupData.data) {
@@ -92,11 +109,14 @@ export function RestoreTab() {
       setStats(result.stats);
       setCurrentStep('복원 완료!');
       setIsComplete(true);
+      toast.success('데이터가 성공적으로 복원되었습니다.');
     } catch (err: any) {
       console.error('🔥 Restore error:', err);
       setError(err.message || '복원 중 오류가 발생했습니다.');
+      toast.error(`데이터 복원 실패: ${err.message}`);
     } finally {
       setIsRestoring(false);
+      console.log('🏁 복원 프로세스 종료');
     }
   };
 
@@ -130,23 +150,47 @@ export function RestoreTab() {
         <CardContent className="space-y-6">
           {!isComplete && !isRestoring && (
             <>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-400 transition-colors">
-                <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <label htmlFor="file-upload" className="cursor-pointer">
-                  <span className="text-sm text-gray-600 font-medium">
-                    {file ? `✅ ${file.name}` : 'JSON 파일을 선택하세요'}
-                  </span>
+              {/* 파일 선택 버튼 - 더 명확하게 */}
+              <div className="space-y-4">
+                <label htmlFor="file-upload">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-400 transition-colors cursor-pointer">
+                    <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                    <span className="text-sm text-gray-600 font-medium block mb-2">
+                      {file ? `✅ ${file.name}` : '📁 JSON 파일을 선택하세요'}
+                    </span>
+                    <p className="text-xs text-gray-500">
+                      이 영역을 클릭하여 파일 선택
+                    </p>
+                  </div>
                   <input
                     id="file-upload"
                     type="file"
-                    accept=".json"
+                    accept=".json,application/json"
                     onChange={handleFileChange}
                     className="hidden"
+                    onClick={(e) => {
+                      console.log('🖱️ 파일 입력 클릭됨');
+                      // Reset input to allow selecting the same file again
+                      e.currentTarget.value = '';
+                    }}
                   />
                 </label>
-                <p className="text-xs text-gray-500 mt-2">
-                  클릭하여 파일 선택
-                </p>
+
+                {/* 또는 버튼 형태로도 선택 가능 */}
+                <div className="text-center">
+                  <Button
+                    onClick={() => {
+                      console.log('🖱️ 파일 선택 버튼 클릭됨');
+                      document.getElementById('file-upload')?.click();
+                    }}
+                    variant="outline"
+                    size="lg"
+                    className="w-full"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    {file ? '다른 파일 선택' : '파일 선택하기'}
+                  </Button>
+                </div>
               </div>
 
               {error && (
@@ -160,11 +204,11 @@ export function RestoreTab() {
                 <Button
                   onClick={handleRestore}
                   disabled={!file || isRestoring}
-                  className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700"
+                  className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   size="lg"
                 >
                   <Upload className="w-4 h-4 mr-2" />
-                  복원 시작
+                  {file ? '복원 시작' : '파일을 먼저 선택하세요'}
                 </Button>
                 {file && (
                   <Button
