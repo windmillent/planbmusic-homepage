@@ -1,7 +1,5 @@
 import { motion } from 'motion/react';
 import { useEffect } from 'react';
-import { Database } from 'lucide-react';
-import { Button } from './ui/button';
 import gradientDots from 'figma:asset/3e8773a26a1c5d7aba8ce2793d7cca62bf591f3d.png';
 import planbLogoWithSlogan from 'figma:asset/815b5738a398eb37b405fa2eb742e21129a3c7da.png';
 import gradientBar from 'figma:asset/4eaa28092d1900da18dff5b5acdce29e60ca64ed.png';
@@ -18,23 +16,6 @@ export function HomePage() {
 
   return (
     <div className="pt-20">
-      {/* 임시 복원 버튼 - 화면 오른쪽 하단 고정 */}
-      <motion.div
-        className="fixed bottom-8 right-8 z-50"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
-      >
-        <Button
-          onClick={() => window.location.href = '#/restore'}
-          className="bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 shadow-2xl text-white font-bold px-6 py-6 text-lg"
-          size="lg"
-        >
-          <Database className="mr-2 h-6 w-6" />
-          데이터 복원
-        </Button>
-      </motion.div>
-
       {/* Hero Section - Fixed height, no scroll */}
       <section className="h-[calc(100vh-5rem)] relative overflow-hidden bg-white flex flex-col">
         {/* Gradient Dots Circle Background - Right top corner with sweeping light */}
